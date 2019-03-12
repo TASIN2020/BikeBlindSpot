@@ -1,3 +1,17 @@
+#include "LedControl.h"
+
+#define CLK_PIN 10
+#define CS_PIN 11
+#define DIN_PIN 12
+LedControl display = LedControl(DIN_PIN, CLK_PIN, CS_PIN);
+
+const uint64_t LEFT_ARROW = 0x000004027f020400;
+const uint64_t RIGHT_ARROW = 0x0404040404150e04;
+
+
+void displayImage(uint64_t image);
+
+
 long readUltrasonicDistance(int triggerPin, int echoPin)
 {
   pinMode(triggerPin, OUTPUT);  // Clear the trigger
@@ -18,16 +32,17 @@ void ledCondition(int sensor, bool led_status){
   
   switch (sensor) {
   case 1:
-    digitalWrite(10, !led_status);
+//    digitalWrite(10, !led_status);
+    displayImage(LEFT_ARROW);
     break;
   case 2:
-    digitalWrite(11, !led_status);
+//    digitalWrite(11, !led_status);
     break;
   case 3:
-    digitalWrite(12, !led_status);
+//    digitalWrite(12, !led_status);
     break;
   case 4:
-    digitalWrite(13, !led_status);
+//    digitalWrite(13, !led_status);
     break;
   default:
     break;
@@ -55,10 +70,17 @@ void setup() {
 //  pinMode(11, OUTPUT);
 //  pinMode(12, OUTPUT);
 //  pinMode(13, OUTPUT);
+
+
+  display.clearDisplay(0);
+  display.shutdown(0, false);
+  display.setIntensity(0, 10);
+
 }
 
 void loop() {
-  
+
+  display.clearDisplay(0);
   long distance_one = 0.01723 * readUltrasonicDistance(2,3);
   detectDistance(1, distance_one);
 
@@ -73,6 +95,15 @@ void loop() {
   long distance_four = 0.01723 * readUltrasonicDistance(8,9);
   detectDistance(4, distance_four);
 
-  */
-  
+  */  
+}
+
+
+void displayImage(uint64_t image) {
+  for (int i = 0; i < 8; i++) {
+    byte row = (image >> i * 8) & 0xFF;
+    for (int j = 0; j < 8; j++) {
+      display.setLed(0, i, j, bitRead(row, j));
+    }
+  }
 }
