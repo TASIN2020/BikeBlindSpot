@@ -16,6 +16,11 @@ constexpr auto CLK_PIN = 10;
 constexpr auto CS_PIN = 11;
 constexpr auto DIN_PIN = 12;
 
+// Ultrasonic Sensor Trigger Pin
+// This must be set to use readUltrasonicDistance(int echoPin)
+// function
+constexpr int COMMON_TRIG_PIN = 2;
+
 LedControl display = LedControl(DIN_PIN, CLK_PIN, CS_PIN);
 
 // IMAGE Data
@@ -33,6 +38,7 @@ unsigned int CLOSEST_PING;
 // All Functions
 void displayImage(uint64_t image);
 long readUltrasonicDistance(int triggerPin, int echoPin);
+long readUltrasonicDistance(int echoPin);
 void ledCondition(int sensor);
 void updateClosestPing(long distance, int sensor);
 void detectDistance(int sensor, long distance);
@@ -49,16 +55,16 @@ void loop() {
 
   MIN_DISTANCE = 360;
 
-  long distance_one = 0.01723 * readUltrasonicDistance(2, 3);
+  long distance_one = 0.01723 * readUltrasonicDistance(3);
   detectDistance(1, distance_one);
 
-  long distance_two = 0.01723 * readUltrasonicDistance(4, 5);
+  long distance_two = 0.01723 * readUltrasonicDistance(5);
   detectDistance(2, distance_two);
 
-  long distance_three = 0.01723 * readUltrasonicDistance(6, 7);
+  long distance_three = 0.01723 * readUltrasonicDistance(7);
   detectDistance(3, distance_three);
 
-  long distance_four = 0.01723 * readUltrasonicDistance(8, 9);
+  long distance_four = 0.01723 * readUltrasonicDistance(9);
   detectDistance(4, distance_four);
 
   ledCondition(CLOSEST_PING);
@@ -118,6 +124,12 @@ long readUltrasonicDistance(int triggerPin, int echoPin) {
   pinMode(echoPin, INPUT);
   // Reads the echo pin, and returns the sound wave travel time in microseconds
   return pulseIn(echoPin, HIGH);
+}
+
+
+// Common Trigger must be defined to use this
+long readUltrasonicDistance(int echoPin){
+	return readUltrasonicDistance(COMMON_TRIG_PIN, echoPin);
 }
 
 void displayImage(uint64_t image) {
