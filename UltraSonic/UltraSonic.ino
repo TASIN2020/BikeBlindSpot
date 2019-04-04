@@ -54,43 +54,61 @@ void setup() {
   display.setIntensity(0, 10);
 }
 
+bool status = false;
+
 void loop() {
 
-  MIN_DISTANCE = 360;
 
-  long distance_one = 0.01723 * readUltrasonicDistance(3);
-  detectDistance(1, distance_one);
+  int button = digitalRead(14);
+  delay(80);
+  Serial.println(digitalRead(14));
 
-  long distance_two = 0.01723 * readUltrasonicDistance(5);
-  detectDistance(2, distance_two);
+  if (button == 1){
+    status = !status;
+    display.clearDisplay(0);
+    display.shutdown(0, status);
+  }
+  
 
-  long distance_three = 0.01723 * readUltrasonicDistance(7);
-  detectDistance(3, distance_three);
+  if (status) {
 
-  long distance_four = 0.01723 * readUltrasonicDistance(9);
-  detectDistance(4, distance_four);
+    MIN_DISTANCE = 360;
 
-  ledCondition(CLOSEST_PING);
-  delay(1500);
+    long distance_one = 0.01723 * readUltrasonicDistance(3);
+    detectDistance(1, distance_one);
+
+    long distance_two = 0.01723 * readUltrasonicDistance(5);
+    detectDistance(2, distance_two);
+
+    long distance_three = 0.01723 * readUltrasonicDistance(7);
+    detectDistance(3, distance_three);
+
+    long distance_four = 0.01723 * readUltrasonicDistance(9);
+    detectDistance(4, distance_four);
+
+    ledCondition(CLOSEST_PING);
+    delay(1500);
+
+  }
 }
 
 void ledCondition(int sensor) {
 
   switch (sensor) {
-  case 1:
-    displayImage(FORWARD_ARROW);
-    break;
-  case 2:
-    displayImage(BACKWARD_ARROW);
-    break;
-  case 3:
-    displayImage(LEFT_ARROW);
-    break;
-  case 4:
-    displayImage(RIGHT_ARROW);
-    break;
-  default:
-    break;
+    case 1:
+      displayImage(FORWARD_ARROW);
+      break;
+    case 2:
+      displayImage(BACKWARD_ARROW);
+      break;
+    case 3:
+      displayImage(LEFT_ARROW);
+      break;
+    case 4:
+      displayImage(RIGHT_ARROW);
+      break;
+    default:
+      break;
   }
 }
 
@@ -99,7 +117,7 @@ void detectDistance(int sensor, long distance) {
     Serial.print(sensor);
     Serial.println(": is Out of range");
   } else {
-	buzz();
+    buzz();
     Serial.print(sensor);
     Serial.print(": ");
     Serial.print(distance);
@@ -132,12 +150,12 @@ long readUltrasonicDistance(int triggerPin, int echoPin) {
 
 
 // Common Trigger must be defined to use this
-long readUltrasonicDistance(int echoPin){
-	return readUltrasonicDistance(COMMON_TRIG_PIN, echoPin);
+long readUltrasonicDistance(int echoPin) {
+  return readUltrasonicDistance(COMMON_TRIG_PIN, echoPin);
 }
 
-void buzz(){
-	digitalWrite(BUZZER_PIN, LOW);
+void buzz() {
+  digitalWrite(BUZZER_PIN, LOW);
 }
 
 void displayImage(uint64_t image) {
