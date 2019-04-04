@@ -4,7 +4,7 @@
   Purpose: Code to detect the proximity of nearby vehicle and warn driver.
 
   @author Adyel Ullahil Mamun
-  @version 0.5.5 17/03/2079
+  @version 0.5.5 17/03/2019
 */
 
 #include "LedControl.h"
@@ -15,6 +15,8 @@
 constexpr auto CLK_PIN = 10;
 constexpr auto CS_PIN = 11;
 constexpr auto DIN_PIN = 12;
+
+constexpr auto BUZZER_PIN = 4;
 
 // Ultrasonic Sensor Trigger Pin
 // This must be set to use readUltrasonicDistance(int echoPin)
@@ -42,6 +44,7 @@ long readUltrasonicDistance(int echoPin);
 void ledCondition(int sensor);
 void updateClosestPing(long distance, int sensor);
 void detectDistance(int sensor, long distance);
+void buzz();
 
 void setup() {
   Serial.begin(9600);
@@ -96,6 +99,7 @@ void detectDistance(int sensor, long distance) {
     Serial.print(sensor);
     Serial.println(": is Out of range");
   } else {
+	buzz();
     Serial.print(sensor);
     Serial.print(": ");
     Serial.print(distance);
@@ -130,6 +134,10 @@ long readUltrasonicDistance(int triggerPin, int echoPin) {
 // Common Trigger must be defined to use this
 long readUltrasonicDistance(int echoPin){
 	return readUltrasonicDistance(COMMON_TRIG_PIN, echoPin);
+}
+
+void buzz(){
+	digitalWrite(BUZZER_PIN, LOW);
 }
 
 void displayImage(uint64_t image) {
