@@ -55,18 +55,27 @@ void setup() {
 }
 
 bool status = false;
+int buttonSum = 0;
 
 void loop() {
 
 
   int button = digitalRead(14);
-  delay(80);
-  Serial.println(digitalRead(14));
+  delay(150);
+  Serial.println(button);
 
-  if (button == 1){
-    status = !status;
+  buttonSum += button;
+
+  if (button == 1 && buttonSum < 5){
+    status = true;
     display.clearDisplay(0);
-    display.shutdown(0, status);
+    display.shutdown(0, false);
+  }else if (buttonSum > 5){
+    status = false;
+    display.clearDisplay(0);
+    display.shutdown(0, true);
+    delay(1500);
+    buttonSum = 0;
   }
   
 
@@ -87,7 +96,7 @@ void loop() {
     detectDistance(4, distance_four);
 
     ledCondition(CLOSEST_PING);
-    delay(1500);
+//    delay(1500);
 
   }
 }
@@ -117,7 +126,6 @@ void detectDistance(int sensor, long distance) {
     Serial.print(sensor);
     Serial.println(": is Out of range");
   } else {
-    buzz();
     Serial.print(sensor);
     Serial.print(": ");
     Serial.print(distance);
@@ -155,11 +163,15 @@ long readUltrasonicDistance(int echoPin) {
 }
 
 void buzz() {
+  pinMode(BUZZER_PIN, OUTPUT);
   digitalWrite(BUZZER_PIN, LOW);
+  delay(50);
+  digitalWrite(BUZZER_PIN, HIGH);
 }
 
 void displayImage(uint64_t image) {
 
+  buzz();
   display.clearDisplay(0);
 
   for (int i = 0; i < 8; i++) {
