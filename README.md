@@ -1,1 +1,2 @@
-BikeBlindSpot
+Smart Driving Assistant
+This embedded device that we made assists bikers by notifying the driver if another vehicle comes near the bike. The device will notify the driver by using an audio and visual signal. This way the biker will be able to know which way another vehicle is approaching even if it is in driver’s blind spot. In the foggy weather or at night while the other vehicles are not captured properly in the mirror, this system will show the biker from which sides the vehicles are coming. As a result, he can easily decide which sides he should take turn or move without noticing the mirror. A biker can also control the whole system by using designated switches.
